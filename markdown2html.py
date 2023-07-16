@@ -1,25 +1,34 @@
-!/usr/bin/python3
-''' Write a script markdown2html.py that takes an argument 2 strings:
-
-    First argument is the name of the Markdown file
-    Second argument is the output file name
-'''
-
+#!/usr/bin/python3
 import sys
-import os.path
-import re
-import hashlib
+import os
+import markdown
+
+def convert_markdown_to_html(inputmd, outputhtml):
+   
+    
+    if not os.path.isfile(inputmd):
+        sys.stderr.write('Missing {}\n'.format(inputmd))
+        sys.exit(1)
+
+    with open(inputmd, 'r') as f:
+        markdown_text = f.read()
+
+
+    html_text = markdown.markdown(markdown_text)
+
+    with open(outputhtml, 'w') as f:
+        f.write(html_text)
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print('Usage: ./markdown2html.py README.md README.html',
-              file=sys.stderr)
-        exit(1)
+        sys.stderr.write('Usage: ./markdown2html.py README.md README.html\n')
+        sys.exit(1)
+    if len(sys.argv) > 3:
+        sys.exit(1)
 
-    if not os.path.isfile(sys.argv[1]):
-        print('Missing {}'.format(sys.argv[1]), file=sys.stderr)
-        exit(1)
+    inputmd = sys.argv[1]
+    outputhtml = sys.argv[2]
 
-    with open(sys.argv[1]) as read:
-        with open(sys.argv[2], 'w') as html:
-            unordered_start, ordered_start, paragraph = False, False, False
+    convert_markdown_to_html(inputmd, outputhtml)
+
+    sys.exit(0)
